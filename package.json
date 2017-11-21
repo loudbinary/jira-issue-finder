@@ -1,0 +1,29 @@
+{
+  "name": "jira-issue-finder",
+  "version": "1.0.0",
+  "description": "Locate all jira issues between two git repository commits",
+  "main": "app.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loudbinary/jira-issue-finder.git"
+  },
+  "keywords": [
+    "jira",
+    "issues"
+  ],
+  "author": "Loudbinary",
+  "license": "SEE LICENSE IN ./LICENSE",
+  "bugs": {
+    "url": "https://github.com/loudbinary/jira-issue-finder/issues"
+  },
+  "homepage": "https://github.com/loudbinary/jira-issue-finder#readme",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  },
+  "dependencies": {
+    "args": "^3.0.7"
+  }
+}
