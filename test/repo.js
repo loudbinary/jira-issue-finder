@@ -1,12 +1,16 @@
 const path = require('path');
-const repo = require('./../libs/repo.js');
-const repoDir= path.resolve(process.cwd(),'..','repo-test');
+const Repo = require('./../libs/repo.js');
+const repo = new Repo();
+const osHomedir = require('os-homedir');
+const repoDir= path.resolve(osHomedir(),'repo-test');
 let assert = require('assert');
 
 describe('repo',function(){
     describe('isRepo',function(){
-        it('../repo-test is a repo, and should return true',function(){
-            repo.isRepo(repoDir).should.equal('true');
+        it('repo-test is a repo, and should return true',function(){
+            repo.isRepo(repoDir).then((result)=>{
+                assert.equal(result,true);
+            })
         })
     })
 });

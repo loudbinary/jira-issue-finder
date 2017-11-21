@@ -6,6 +6,10 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
   },
+  "bin": {
+    "jif": "./bin/jira-issue-finder.js",
+    "jira-issue-finder": "./bin/jira-issue-finder.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/loudbinary/jira-issue-finder.git"
@@ -24,6 +28,13 @@
     "mocha": "^4.0.1"
   },
   "dependencies": {
-    "args": "^3.0.7"
+    "args": "^3.0.7",
+    "bluebird": "^3.5.1",
+    "execa": "^0.8.0",
+    "lodash": "^4.17.4",
+    "os-homedir": "^1.0.2",
+    "reverse-string": "0.0.6",
+    "semver": "^5.4.1",
+    "semver-max": "^1.0.0"
   }
 }
