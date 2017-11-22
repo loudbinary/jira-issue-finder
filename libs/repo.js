@@ -72,7 +72,7 @@ Repo.prototype.isRepo = function() {
     return new Promise((resolve,reject)=>{
         exec.shell('git rev-parse --git-dir', [],{cwd: instance.repoDir}).then(result => {
             let results = removeLineBreaks(result.stdout.toString());
-            if (results == '.git') {
+            if (results.indexOf('.git') >= 0) {
                 if (instance.debug){
                     console.log('Instance.debug:',instance.debug);
                 }
@@ -174,9 +174,61 @@ Repo.prototype.getLatestTagCommitSha = function(){
     })
 }
 
+Repo.prototype.getJiraIdsSince = function(since){
+    return new Promise((resolve,reject)=>{
+        let cmd = `cd ${instance.repoDir} && git log --since=${since} --oneline --no-abbrev-commit`
+        if (instance.debug){
+            console.log('Executing cmd:',cmd);
+        }
+
+        exec.shell(cmd).then(result =>{
+            let results = result.stdout;
+            if (results != null){
+                let newArray = [];
+                if (results.indexOf('\n') === -1){
+                    //newArray = _.dropRight(_.split(results,'\n',results.length));
+                    newArray.push(results)
+                } else {
+                    newArray.push(results);
+                }
+                //let newArray = _.dropRight(_.split(results,'\n',results.length));
+                let notes = newArray.map((item)=>{
+                    // Javascript has no look behind, reverse to fool it.
+                    return reverse(item.substring(item.indexOf(' '),item.length).trim())
+                });
+
+                let jiraIds = notes.map((item)=>{
+                    let results = item.match(jira_matcher);
+                    if (results) {
+                        return reverse(results.toString())
+                    }
+                })
+                jiraIds = _.uniq(jiraIds.filter((n)=> {return n != undefined}));
+
+
+                let merged = _.map(jiraIds,(item)=>{
+                    if (item.indexOf(',') != -1) {
+                        return item.split(',');
+                    } else {
+                        return item;
+                    }
+                })
+                instance.jiraIds = _.flattenDeep(merged);
+                instance.jiraIds = _.uniqWith(instance.jiraIds,_.isEqual)
+                if (instance.debug){
+                    console.log('Found', instance.jiraIds.length,' jira ids');
+                }
+                resolve(true);
+            } else {
+                resolve('No jira ids found for evaluated tags ' + tag);
+            }
+        })
+    })
+}
 Repo.prototype.getJiraIds = function() {
     return new Promise((resolve,reject)=>{
-        let tag = instance.highestTag_sha + '..' + instance.currentHeadSha;
+        //let tag = instance.highestTag_sha + '..' + instance.currentHeadSha;
+        let tag = instance.currentHeadSha + '..' + instance.highestTag_sha;
         if (instance.highestTag_sha == instance.currentHeadSha){
             resolve('Commit shas match, no jira ids available.')
         }
