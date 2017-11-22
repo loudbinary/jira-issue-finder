@@ -1,6 +1,6 @@
 {
   "name": "jira-issue-finder",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Locate all jira issues between two git repository commits",
   "main": "app.js",
   "scripts": {
